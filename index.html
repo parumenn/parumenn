@@ -1,0 +1,456 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+        h2 {color: rgb(39, 133, 125); }
+
+        .btn {
+        width: 120px;
+        height: 50px;
+        }
+        .btn a {
+        transition: all 300ms linear;
+        display: block;
+        width: 100%;
+        height: 100%;
+        line-height: 50px;
+        color: #4ABBBC;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 600;
+        background-color: #343752;
+        text-decoration: none;
+        }
+        .btn a:hover {
+        opacity: 0.9;
+        color: #343752;
+        background-color: #4ABBBC;
+        border: 1px solid #6151B2;
+        }
+        
+        .btn2 {
+        width: 200px;
+        height: 50px;
+        }
+        .btn2 a {
+        transition: all 300ms linear;
+        display: block;
+        width: 100%;
+        height: 100%;
+        line-height: 50px;
+        color: #71A5E1;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 600;
+        background-color: #F8C5A1;
+        }
+        .btn2 a:hover {
+        opacity: 0.9;
+        color: #F8C5A1;
+        background-color: #71A5E1;
+        border: 1px solid #F8C5A1;
+        }
+        .btn3 {
+        transition: all 300ms linear;
+        appearance: none;
+        border: 0;
+        border-radius: 5px;
+        background: #7B6469;
+        color: #D7A99B;
+        padding: 8px 16px;
+        font-size: 16px;
+        min-width: 100px;
+        min-height:40px;
+        }
+
+        .btn3:hover {
+          background: #594548;
+        }
+
+        .btn3:focus {
+          outline: none;
+          box-shadow: 0 0 0 5px #A16B5D;
+        }
+        .text {
+            color: #eedbd5;
+            font-size: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <canvas width="500" height="500" id="c01" style="background:url(bak1.png)"></canvas>
+    <script language="JavaScript">
+        ctx = document.body.style.backgroundColor = "#4D4D4F";
+    ctx = document.getElementById("c01").getContext("2d")
+    var canvas = document.getElementById("c01")
+    var ctx = canvas.getContext("2d")
+    var bgid = ctx.getImageData(0, 0, canvas.width, canvas.height) // background image data
+
+    Up = 38, Down = 40, Right = 39, Left = 37, Id = 2
+
+    
+    block_size = 25, field_size = 20, esa_kosuu = 20, kabe_kosuu = 2, pacman = [0, 0]
+    ipacman = new Image(), iMs = new Image(), iMs2 = new Image(), ikabe = new Image(), iesa = new Image(), BGMid = new Audio()
+    count = 0
+    color = "rgb(0, 200, 255)"
+    kabe = []
+    Ms = [field_size/2,field_size/2]
+    Ms2 = [1,10]
+    X = 0
+    Y = 1
+    esa = []
+    data = 0
+    data2 = 0
+    cc = 0;
+    clear1=0
+    first = 0;
+    key = 0
+    plass = 0
+    iMsplas = 0
+    ba = 0
+    firstbgm = 0
+    onload = init
+    kabe_sakusei()
+    esa_sakusei()
+    function init(){
+        
+        /*
+        if(key == 0){
+            ipacman.src = "pacman2.png"
+        }else if(key == 1){
+            ipacman.src = "hidari.png"
+        }else if(key == 2){
+            ipacman.src = "ue.png"
+        }else if(key == 3){
+            ipacman.src = "sita.png"
+        }*/
+        switch (key){
+            case 0:ipacman.src = "pacman2.png"
+                break;
+            case 1:ipacman.src = "hidari.png"
+                break;
+            case 2:ipacman.src = "ue.png"
+                break;
+            case 3:ipacman.src = "sita.png"
+                break;
+                default:
+        }
+        iMs.src = "ms.png"
+        iMs2.src = "ms2.png"
+        ikabe.src = "k0.png"
+        iesa.src = "esa1.png"
+    draw()
+    }
+
+    function colorC(){
+        
+        r = Math.floor(Math.random()*256)
+        g = Math.floor(Math.random()*256)
+        b = Math.floor(Math.random()*256)
+        color = "rgb("+r+","+g+","+b+")"
+        if(color == "rgb(150, 150, 150)"){
+            colorC
+        }
+        draw()
+    }
+    
+    function RL(){
+    //    function doReload()
+     window.location.reload();
+    }
+    
+    function esa_sakusei(){
+        var str = ""
+        for(var i = 0; i < esa_kosuu; i++){
+            var total = 0
+            do{           
+                esa[i] = [Math.floor(Math.random()*field_size),
+                          Math.floor(Math.random()*field_size)]
+                total += 1
+            }while(check(i))
+            //str += i+"回目 "+total+"\n"
+        }
+       // alert(str)
+    }
+ 
+    function kabe_sakusei(){
+        /*ランダム作成時はコメントアウトを外し下の指定座標をコメントアウトにしてください。
+        for(var i = 0; i < kabe_kosuu; i++){      
+                kabe[i] = [Math.floor(Math.random()*field_size),
+                          Math.floor(Math.random()*field_size)]
+        }
+        */
+       //
+       kabe = [[2,1,0],[2,2,1],[2,3,2],[2,4,3],[2,5,4],[2,6,5],[2,7,6],[2,8,7],[2,9,8],[3,11,9],[2,11,10],[2,12,11],[2,13,12],[2,14,13],[2,15,14],[2,16,15],[2,17,16],[2,18,17],[3,15,18],[3,16,19],[3,17,20],[3,18,21],[3,14,22],[3,13,23],[3,12,24],[5,11,25],[3,9,26],[3,8,27],[3,7,28],[3,6,29],[3,5,30],[3,4,31],[3,3,32],[3,2,33],[3,1,34],[5,12,35],[5,13,36],[5,14,37],[5,15,38],[5,16,39],[5,17,40],[5,18,41],[7,10,42],[7,11,43],[7,12,44],[7,13,45],[7,14,46],[8,14,47],[9,14,48],[10,14,49],[11,14,50],[12,14,51],[13,14,52],[13,13,53],[13,12,54],[13,11,55],[13,10,56],[12,9,57],[10,12,58],[8,9,59],[6,1,60],[7,9,61],[13,9,61],[13,18,62],[12,18,63],[11,18,64],[10,18,65],[9,18,66],[8,18,67],[7,18,68],[6,2,69],[6,3,70],[6,5,71],[6,6,72],[8,6,73],[7,6,74],[7,5,75],[8,5,76],[7,3,77],[7,2,78],[7,1,76],[10,1,77],[10,2,78],[10,3,79],[10,4,80],[10,5,81],[10,6,82],[12,6,83],[13,6,84],[14,6,85],[12,5,86],[13,5,87],[14,5,88],[14,3,89],[14,2,90],[14,1,91],[13,1,92],[13,2,93],[13,3,94],[16,3,95],[16,4,96],[16,5,97],[16,6,98],[16,7,99],[16,8,100],[16,9,101],[17,3,102],[17,4,103],[17,5,104],[17,6,105],[17,7,106],[17,8,107],[17,9,108],[17,2,109],[17,1,110],[16,1,111],[16,2,112],[16,11,113],[16,12,114],[16,13,115],[16,14,116],[16,15,117],[16,16,118],[16,17,119],[16,18,120],[17,18,121],[17,17,122],[17,16,122],[17,15,123],[17,14,124],[17,13,125],[17,12,126],[17,11,127]]
+    }
+   
+    function check(n){
+        if(pacman[X] == esa[n][X] && pacman[Y] == esa[n][Y])
+            return true
+        for(var i = 0; i < n; i++){
+            if(esa[i][X] == esa[n][X] && esa[i][Y] == esa[n][Y]){return true}
+        }
+        //以下壁判定
+        for(var ii = 0; ii < kabe.length; ii++){
+            if(kabe[ii][X] == esa[n][X] && kabe[ii][Y] == esa[n][Y]){return true}
+        }
+        return false
+    }
+    
+    function draw(){
+        clear()
+        //ctx.fillStyle = "rgb(0, 255, 0)"
+        //ctx.fillStyle = color 画像導入により削除
+        for(i = 0; i < esa.length; i++){
+            ctx.drawImage(iesa,esa[i][X] * block_size, esa[i][Y] * block_size, block_size, block_size)
+        }            
+        draw_kabe()
+        draw_Monster()
+        if(plass == 1){
+        draw_Monster2()
+        }
+        var name = count;
+        document.getElementById("text").innerHTML="カウント："+name+"個/"+esa_kosuu+"個";
+
+        ctx.drawImage(ipacman, pacman[X] * block_size, pacman[Y] * block_size, block_size, block_size)
+        
+    }
+    
+    function draw_kabe(){
+        for(i = 0; i < kabe.length; i++){
+            ctx.drawImage(ikabe,kabe[i][X] * block_size, kabe[i][Y] * block_size, block_size, block_size)
+        }         
+        
+    }
+
+    function clearch(){
+        if(count >= esa_kosuu){
+            if(clear1==0){
+                BGMid.pause(); //bgmを停止
+                BGMid.currentTime = 0//再生位置を初期化
+                ba = 1 //bgmをクリア用に変更
+                bgm() //再度再生
+                clear()
+                document.write( '<img src="clear.png">' );
+                // alert("クリア")
+                clear1=1 //演出の重複を回避
+                setTimeout(RL, 7000)
+               ba = 0; //bgmを初期化
+            }
+        }
+    }
+
+ function Gover(){
+    if(pacman[X] == Ms[X] && pacman[Y] == Ms[Y]){
+        if(clear1 == 0){
+        BGMid.pause(); //bgmを停止
+        BGMid.currentTime = 0//再生位置を初期化
+        ba = 2 //bgmをクリア用に変更
+        bgm() //再度再生
+        document.write( '<img src="gameover.png">' );
+        setTimeout(RL, 4200)
+        clear1 = 1
+        }
+    }
+    if(plass == 1){
+        if(pacman[X] == Ms2[X] && pacman[Y] == Ms2[Y]){
+            if(clear1 == 0){
+            document.write( '<img src="gameover.png">' );
+            setTimeout(RL, 3000)
+            clear1 = 1
+            }
+        }
+    }
+ }
+
+    function Msmv(){
+        
+        var mx = Ms[X], my = Ms[Y]
+        /*
+        data = Math.floor(Math.random()*4)
+        switch(data){
+            case 1:
+                Ms[X]++
+            break;
+            case 2:
+                Ms[Y]++
+            break;
+            case 3:
+                Ms[Y]--
+            break;
+            case 0:
+                Ms[X]--
+            break;
+        }
+        */
+        data = Math.floor(Math.random()*2)
+        switch(data){
+            case 0:
+            if(pacman[X] < Ms[X]){
+                Ms[X]--
+            }else if((pacman[X] > Ms[X])){Ms[X]++}
+            break;
+
+            case 1:
+            if(pacman[Y] < Ms[Y]){
+                Ms[Y]--
+            }else if((pacman[Y] > Ms[Y])){Ms[Y]++}
+            break;
+        }
+
+
+        for(i = 0; i < kabe.length; i++){
+                if(Ms[X] == kabe[i][X] && Ms[Y] == kabe[i][Y]){
+                    Ms[X] = mx
+                    Ms[Y] = my
+                }
+            }
+            draw()
+    draw_Monster()
+    }
+    function Msmvmk2(){
+        var mx2 = Ms2[X], my2 = Ms2[Y]
+        data = Math.floor(Math.random()*2)
+        switch(data){
+            case 0:
+            if(pacman[X] < Ms2[X]){
+                Ms2[X]--
+            }else if((pacman[X] > Ms2[X])){Ms2[X]++}
+            break;
+
+            case 1:
+            if(pacman[Y] < Ms2[Y]){
+                Ms2[Y]--
+            }else if((pacman[Y] > Ms2[Y])){Ms2[Y]++}
+            break;
+        }
+        for(i = 0; i < kabe.length; i++){
+                if(Ms2[X] == kabe[i][X] && Ms2[Y] == kabe[i][Y]){
+                    Ms2[X] = mx2
+                    Ms2[Y] = my2
+                }
+            }
+            draw()
+    draw_Monster2()
+    }
+
+    function draw_Monster(){
+        ctx.drawImage(iMs,Ms[X] * block_size, Ms[Y] * block_size, block_size, block_size)
+        if(Ms[X] > field_size-1){Ms[X]--}else if(Ms[X] < 0){Ms[X]++}
+        if(Ms[Y] > field_size-1){Ms[Y]--}else if(Ms[Y] < 0){Ms[Y]++}
+    }
+    function draw_Monster2(){
+        ctx.drawImage(iMs2,Ms2[X] * block_size, Ms2[Y] * block_size, block_size, block_size)
+        if(Ms2[X] > field_size-1){Ms2[X]--}else if(Ms2[X] < 0){Ms2[X]++}
+        if(Ms2[Y] > field_size-1){Ms2[Y]--}else if(Ms2[Y] < 0){Ms2[Y]++}
+    }
+    function clear(){
+        ctx.putImageData(bgid, 0, 0)
+    }
+    
+    onkeydown = keydown
+    function keydown(e){
+        var sx = pacman[X], sy = pacman[Y]
+
+        if(e.keyCode == Right && pacman[X] < field_size-1){
+        pacman[X]++
+        key = 0
+        }else if(e.keyCode == Left && pacman[X] > 0){
+        pacman[X]--
+        key = 1
+        }else if(e.keyCode == Up && pacman[Y] > 0){
+        pacman[Y]--
+        key = 2
+        }else if(e.keyCode == Down && pacman[Y] < field_size-1){
+        pacman[Y]++
+        key = 3
+        }
+    
+        var i
+        for(i = 0; i < esa_kosuu; i++){
+            if(pacman[X] == esa[i][X] && pacman[Y] == esa[i][Y]){
+                esa[i] = -1
+                count++
+            }
+        }
+        for(i = 0; i < kabe.length; i++){
+        if(pacman[X] == kabe[i][X] && pacman[Y] == kabe[i][Y]){
+            pacman[X] = sx
+            pacman[Y] = sy
+        }
+    }
+      
+      init()
+      if(firstbgm == 0){
+        bgm()
+        firstbgm = 1
+    }
+    }
+    function Msplas(){
+        if(iMsplas == 0){
+        plass = 1
+        setInterval(Msmvmk2, 200)
+        iMsplas = 1
+        }
+    }
+    var Mss = setInterval(Msmv, 200)
+    
+	setInterval(draw, 2)
+    setInterval(Gover, 2)
+    setInterval(clearch, 2)
+    function Msmv1(){
+        clearInterval(Mss)
+        var speed = 200
+        Mss = setInterval(Msmv, speed)
+        
+    }
+    function Msmv2(){
+        clearInterval(Mss)
+        var speed = 150
+        Mss = setInterval(Msmv, speed)
+        if(plass == 1){
+        draw_Monster2()
+        }
+    }
+    function Msmv3(){
+        clearInterval(Mss)
+        var speed = 40
+        Mss = setInterval(Msmv, speed)
+    }
+    function Msmv4(){
+        clearInterval(Mss)
+        var speed = 10
+        Mss = setInterval(Msmv, speed)
+    }
+    function bgm(){
+        if(ba == 0){BGMid.src = "./gamebgm.mp3";
+        }else if(ba == 1){BGMid.src = "./clear.mp3";
+        }else if(ba == 2){BGMid.src = "./gameover.mp3";
+        }
+        BGMid.loop = true;
+        BGMid.play();
+        //var BGMcos = document.getElementById("BGMid");
+
+    }
+    function clearbgm(){
+        document.getElementById("clearbgm").play();
+        
+    }
+    </script>
+    <p></p>
+    <div class="btn" onclick="RL();"><a href="">再挑戦！！！</a></div>
+    <h2 id="text"></h2>
+
+    </audio>
+    <audio id="clearbgm" preload="auto">
+        <source src="./clear.mp3" type="audio/mp3">
+        <p>ご利用中のデバイスではBGM再生が無効となります。</p>
+    </audio>
+    <p class="text">～難易度～</p>
+    <button class = btn3 value="１" onclick="Msmv1();">１</button>
+    <button class = btn3 value="２" onclick="Msmv2();">２</button>
+    <button class = btn3 value="３" onclick="Msmv3();">３</button>
+    <button class = btn3 value="４" onclick="Msmv4();">４</button>
+    <button class = btn3 value="モンスター追加" onclick="Msplas();">モンスター追加</button>
+</body>
+    </html>
+    
